@@ -65,7 +65,7 @@ public class IngredientRepositoryImpl implements IngredientRepository {
     public List<Ingredient> findAll() {
         var ingredients = new ArrayList<Ingredient>();
         try {
-            var ps = connection.prepareStatement("select * from ingredient");
+            var ps = connection.prepareStatement("select * from ingredient order by name asc");
             var result = ps.executeQuery();
             while (result.next()) {
                 ingredients.add(
