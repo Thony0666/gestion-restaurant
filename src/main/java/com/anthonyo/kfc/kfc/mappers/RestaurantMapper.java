@@ -10,14 +10,12 @@ public class RestaurantMapper {
     public Restaurant toEntity(RestaurantRequest restaurantRequest){
         return Restaurant.builder()
                 .id(restaurantRequest.getId())
-                .name(restaurantRequest.getName())
                 .place(restaurantRequest.getPlace())
                 .build();
     }
     public RestaurantResponse toResponse(Restaurant restaurant){
         return RestaurantResponse.builder()
                 .id(restaurant.getId())
-                .name(restaurant.getName())
                 .place(restaurant.getPlace())
                 .build();
     }

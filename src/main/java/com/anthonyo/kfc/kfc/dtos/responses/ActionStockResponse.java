@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 @Data
@@ -13,7 +15,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ActionStockResponse {
-    Instant actionDate;
+    LocalDateTime actionDate;
     String ingredient;
     String type;
     Double quantity;

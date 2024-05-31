@@ -12,4 +12,5 @@ import lombok.experimental.FieldDefaults;
 public class StockRequest {
     Double quantity;
     Integer ingredientId;
+    Integer restaurantId;
 }

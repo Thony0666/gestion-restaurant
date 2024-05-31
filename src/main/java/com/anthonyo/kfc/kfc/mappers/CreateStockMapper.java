@@ -3,6 +3,7 @@ package com.anthonyo.kfc.kfc.mappers;
 import com.anthonyo.kfc.kfc.dtos.requests.StockRequest;
 import com.anthonyo.kfc.kfc.dtos.responses.StockResponse;
 import com.anthonyo.kfc.kfc.entities.Ingredient;
+import com.anthonyo.kfc.kfc.entities.Restaurant;
 import com.anthonyo.kfc.kfc.entities.Stock;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,9 @@ public class CreateStockMapper {
                 .quantity( stock.getQuantity() )
                 .ingredient(Ingredient.builder()
                         .id(stock.getIngredientId())
+                        .build())
+                .restaurant(Restaurant.builder()
+                        .id(stock.getRestaurantId())
                         .build())
                 .build();
     }

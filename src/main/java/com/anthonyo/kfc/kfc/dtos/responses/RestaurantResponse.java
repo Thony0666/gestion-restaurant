@@ -11,6 +11,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level =  AccessLevel.PRIVATE)
 public class RestaurantResponse {
      Integer id;
-     String name;
      String place;
 }

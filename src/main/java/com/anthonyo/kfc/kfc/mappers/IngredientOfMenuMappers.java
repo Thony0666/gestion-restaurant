@@ -11,13 +11,11 @@ import org.springframework.stereotype.Component;
 public class IngredientOfMenuMappers {
     public IngredientOfMenu toEntity(IngredientOfMenuRequest ingredientOfMenuRequest) {
         return IngredientOfMenu.builder()
-                .id(ingredientOfMenuRequest.getId())
-                .quantity(ingredientOfMenuRequest.getQuantity())
                 .menu(Menu.builder()
-                        .id(ingredientOfMenuRequest.getMenuId())
+                        .name(ingredientOfMenuRequest.getMenuName())
+                        .price(ingredientOfMenuRequest.getMenuPrice())
                         .build())
                 .ingredient(Ingredient.builder()
-                        .id(ingredientOfMenuRequest.getIngredientId())
                         .build())
                 .build();
     }

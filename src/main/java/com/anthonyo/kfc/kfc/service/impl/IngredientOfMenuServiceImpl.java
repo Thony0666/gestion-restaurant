@@ -1,59 +1,57 @@
 package com.anthonyo.kfc.kfc.service.impl;
 
 import com.anthonyo.kfc.kfc.dtos.requests.IngredientOfMenuRequest;
+import com.anthonyo.kfc.kfc.dtos.requests.UpdateQteIOFRequest;
+import com.anthonyo.kfc.kfc.dtos.responses.IOMResponse;
 import com.anthonyo.kfc.kfc.dtos.responses.IngredientOfMenuResponse;
-import com.anthonyo.kfc.kfc.entities.ActionStock;
-import com.anthonyo.kfc.kfc.entities.Ingredient;
-import com.anthonyo.kfc.kfc.entities.IngredientOfMenu;
-import com.anthonyo.kfc.kfc.entities.Stock;
+import com.anthonyo.kfc.kfc.entities.*;
 import com.anthonyo.kfc.kfc.enums.ActionStockType;
+import com.anthonyo.kfc.kfc.exceptions.BadRequestException;
 import com.anthonyo.kfc.kfc.exceptions.NotFoundException;
 import com.anthonyo.kfc.kfc.mappers.IngredientOfMenuMappers;
-import com.anthonyo.kfc.kfc.repository.ActionStockRepository;
-import com.anthonyo.kfc.kfc.repository.IngredientOfMenuRepository;
-import com.anthonyo.kfc.kfc.repository.StockRepository;
+import com.anthonyo.kfc.kfc.repository.*;
 import com.anthonyo.kfc.kfc.service.IngredientOfMenuService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class IngredientOfMenuServiceImpl implements IngredientOfMenuService {
-    private final ActionStockRepository actionStockRepository;
-    private final StockRepository stockRepository;
     private final IngredientOfMenuRepository ingredientOfMenuRepository;
-    private  final IngredientOfMenuMappers ingredientOfMenuMappers;
-
-    public IngredientOfMenuServiceImpl(ActionStockRepository actionStockRepository, StockRepository stockRepository, IngredientOfMenuRepository ingredientOfMenuRepository, IngredientOfMenuMappers ingredientOfMenuMappers) {
-        this.actionStockRepository = actionStockRepository;
-        this.stockRepository = stockRepository;
-        this.ingredientOfMenuRepository = ingredientOfMenuRepository;
-        this.ingredientOfMenuMappers = ingredientOfMenuMappers;
-    }
-
+    private final MenuRepository menuRepository;
+    private final IngredientRepository  ingredientRepository;
 
     @Override
-    public IngredientOfMenuResponse create(IngredientOfMenuRequest toCreate) {
-        var stock = stockRepository.findByIngredientId(toCreate.getIngredientId()).orElseThrow(()->new NotFoundException("Not found id"));
-        if (stock.getQuantity() < toCreate.getQuantity() || stock.getQuantity() == 0) {
-            throw new NotFoundException("Insufficient stock quantity");
+    public void create(IngredientOfMenuRequest toCreate) {
+        for (var q: toCreate.getIngredientList()){
+            ingredientRepository.findById(q.getIngredientId()).orElseThrow(()->new NotFoundException("ingredient not found"));
+            IngredientOfMenu.builder()
+                    .ingredient(Ingredient.builder().id(q.getIngredientId()).build()).build();
         }
-        stock.setQuantity(stock.getQuantity() - toCreate.getQuantity());
-        stockRepository.update(stock);
-        IngredientOfMenu ingredientOfMenu =ingredientOfMenuMappers.toEntity(toCreate);
-        var actionStock = ActionStock
-                .builder()
-                .type(ActionStockType.SORTIE)
-                .quantity(toCreate.getQuantity())
-                .stock(Stock.builder()
-                        .id(stock.getId())
-                        .build())
-                .ingredient(Ingredient.builder()
-                        .id(toCreate.getIngredientId())
-                        .build())
-                .dateTime(Instant.now())
-                .build();
-        actionStockRepository.create(actionStock);
-        return ingredientOfMenuMappers.toResponse(ingredientOfMenuRepository.create(ingredientOfMenu));
+        var  createMenu = menuRepository.create(Menu.builder()
+                .name(toCreate.getMenuName())
+                .price(toCreate.getMenuPrice())
+                .build());
+        for (var q: toCreate.getIngredientList()){
+            var ingredientOfMenu = IngredientOfMenu.builder()
+                     .ingredient(Ingredient.builder().id(q.getIngredientId()).build())
+                     .quantity(q.getQuantity())
+                     .menu(Menu.builder().id(createMenu.getId()).build())
+                     .build();
+             ingredientOfMenuRepository.create(ingredientOfMenu);
+        }
+    }
+
+    @Override
+    public void updateQte(UpdateQteIOFRequest updateQteIOFRequest) {
+         ingredientOfMenuRepository.findByManyID(updateQteIOFRequest.getMenuId(), updateQteIOFRequest.getIngredientId()).orElseThrow(()->new NotFoundException("selected not found"));
+         ingredientOfMenuRepository.update(updateQteIOFRequest);
+    }
+
+    @Override
+    public List<IOMResponse> getByMenuId(Long menuId) {
+        return ingredientOfMenuRepository.findAllByMenuId(menuId);
     }
 }

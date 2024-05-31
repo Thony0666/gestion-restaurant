@@ -14,6 +14,6 @@ public class Stock {
     private Integer id;
     private Double quantity;
     private Ingredient ingredient;
-    private List<Restaurant> restaurants = new ArrayList<>();
+    private Restaurant restaurant;
     private List<ActionStock> actionsStock = new ArrayList<>();
 }

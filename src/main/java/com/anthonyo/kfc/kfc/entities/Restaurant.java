@@ -13,8 +13,7 @@ import java.util.List;
 @Builder
 public class Restaurant {
     private Integer id;
-    private String name;
     private String place;
     private List<Stock> stocks = new ArrayList<>();
-    private List<Menu> menus = new ArrayList<>();
+    private List<Sale> sales = new ArrayList<>();
 }

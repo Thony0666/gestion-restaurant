@@ -3,6 +3,9 @@ package com.anthonyo.kfc.kfc.dtos.requests;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
@@ -11,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IngredientOfMenuRequest {
     Integer id;
-    Double quantity;
-    Integer menuId;
-    Integer ingredientId;
+    String menuName;
+    Integer menuPrice;
+    List<IngredientQteListRequest> ingredientList =new ArrayList<>();
 }

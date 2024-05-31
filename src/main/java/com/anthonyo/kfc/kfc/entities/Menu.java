@@ -14,6 +14,6 @@ public class Menu {
     private Integer id;
     private String name;
     private Integer price;
-    private List<Restaurant> restaurants = new ArrayList<>();
+    private List<Sale> menus = new ArrayList<>();
     private List<IngredientOfMenu> ingredientsOfMenu = new ArrayList<>();
 }

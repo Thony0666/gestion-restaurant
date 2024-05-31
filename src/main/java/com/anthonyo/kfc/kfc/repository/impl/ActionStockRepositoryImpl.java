@@ -26,7 +26,7 @@ public class ActionStockRepositoryImpl implements ActionStockRepository {
             PreparedStatement ps = connection.prepareStatement("insert into action_stock (quantity,type,action_date,ingredient_id,stock_id) values (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             ps.setDouble(1, toCreate.getQuantity());
             ps.setString(2, toCreate.getType().name());
-            ps.setTimestamp(3, Timestamp.from(toCreate.getDateTime()));
+            ps.setTimestamp(3, Timestamp.from(Instant.now()));
             ps.setInt(4, toCreate.getIngredient().getId());
             ps.setInt(5, toCreate.getStock().getId());
             var result = ps.executeUpdate();
@@ -50,7 +50,7 @@ public class ActionStockRepositoryImpl implements ActionStockRepository {
             ps.executeQuery();
             var rs = ps.executeQuery();
             while (rs.next()) {
-                Instant instant = rs.getTimestamp("action_date").toInstant();
+                var instant = rs.getTimestamp("action_date").toLocalDateTime();
                 actionStocks.add(
                         ActionStockResponse.builder()
                                 .actionDate(instant)
@@ -91,7 +91,7 @@ public class ActionStockRepositoryImpl implements ActionStockRepository {
             ps.setDate(2, Date.valueOf(toDate));
             var rs = ps.executeQuery();
             while (rs.next()) {
-                Instant instant = rs.getTimestamp("action_date").toInstant();
+                var instant = rs.getTimestamp("action_date").toLocalDateTime();
                 actionStocks.add(
                         ActionStockResponse.builder()
                                 .actionDate(instant)

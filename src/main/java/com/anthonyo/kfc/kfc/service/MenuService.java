@@ -1,7 +1,12 @@
 package com.anthonyo.kfc.kfc.service;
 
+import com.anthonyo.kfc.kfc.dtos.requests.MenuRequest;
+import com.anthonyo.kfc.kfc.dtos.responses.MenuResponse;
 import com.anthonyo.kfc.kfc.entities.Menu;
 
+import java.util.List;
+
 public interface MenuService {
-    Menu create (Menu toCreate);
+    MenuResponse create (MenuRequest toCreate);
+    List<Menu> getAll();
 }

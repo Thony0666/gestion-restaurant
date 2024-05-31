@@ -1,9 +1,14 @@
 package com.anthonyo.kfc.kfc.service.impl;
 
+import com.anthonyo.kfc.kfc.dtos.requests.ActionStockDateRangeRequest;
 import com.anthonyo.kfc.kfc.dtos.requests.StockRequest;
+import com.anthonyo.kfc.kfc.dtos.requests.SupplyStockRequest;
+import com.anthonyo.kfc.kfc.dtos.responses.ActionStockResponse;
 import com.anthonyo.kfc.kfc.dtos.responses.StockResponse;
 import com.anthonyo.kfc.kfc.entities.ActionStock;
 import com.anthonyo.kfc.kfc.entities.Ingredient;
+import com.anthonyo.kfc.kfc.entities.Restaurant;
+import com.anthonyo.kfc.kfc.entities.Stock;
 import com.anthonyo.kfc.kfc.enums.ActionStockType;
 import com.anthonyo.kfc.kfc.exceptions.NotFoundException;
 import com.anthonyo.kfc.kfc.mappers.CreateStockMapper;
@@ -13,6 +18,10 @@ import com.anthonyo.kfc.kfc.service.StockService;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class StockServiceImpl implements StockService {
@@ -31,41 +40,49 @@ public class StockServiceImpl implements StockService {
     public StockResponse createStock(StockRequest stockRequest) {
         var stock = createStockMapper.toEntity(stockRequest);
         var createdStock = stockRepository.create(stock);
-//        var stockByIdIngredient = stockRepository.findByIngredientId(stockRequest.getIngredientId()).orElseThrow(() -> new NotFoundException("Ingredient not found"));
-//        var actionStock = ActionStock
-//                .builder()
-//                .quantity(stockRequest.getQuantity())
-//                .ingredient(Ingredient
-//                                .builder()
-//                                .id(stockRequest.getIngredientId())
-//                                .build())
-//                .stock(stockByIdIngredient)
-//                .dateTime(Instant.now())
-//                .type(ActionStockType.ENTRY)
-//                .build();
-//        actionStockRepository.create(actionStock);
         return createStockMapper.toResponse(createdStock);
     }
 
     @Override
-    public StockResponse updateStock(StockRequest stockRequest) {
-        var stock = stockRepository.findByIngredientId(stockRequest.getIngredientId()).orElseThrow(() -> new NotFoundException("Ingredient not found"));
-        stock.setQuantity(stock.getQuantity() + stockRequest.getQuantity());
-        stockRepository.update(stock);
-        var actionStock = ActionStock
-                .builder()
-                .quantity(stockRequest.getQuantity())
-                .type(ActionStockType.ENTRY)
-                .ingredient(Ingredient
-                        .builder()
-                        .id(stockRequest.getIngredientId())
+    public StockResponse updateStock(SupplyStockRequest supplyStockRequest) {
+        var stockById =stockRepository.findByIngredientId(supplyStockRequest).orElseThrow(()->new NotFoundException("stock not found"));
+        var stock = Stock.builder()
+                .restaurant(Restaurant.builder()
+                        .id(supplyStockRequest.getRestaurant())
                         .build())
-                .stock(stock)
-                .dateTime(Instant.now())
+                .ingredient(Ingredient.builder()
+                        .id(supplyStockRequest.getIngredient())
+                        .build())
+                .quantity(stockById.getQuantity() + supplyStockRequest.getNewQuantity())
                 .build();
-        actionStockRepository.create(actionStock);
-        return createStockMapper.toResponse(stock);
+               stockRepository.update(stock);
+        var action = ActionStock.builder()
+                .ingredient(Ingredient.builder()
+                        .id(supplyStockRequest.getIngredient())
+                        .build())
+                .type(ActionStockType.ENTRY)
+                .dateTime(Instant.now())
+                .stock(Stock.builder()
+                        .id(stockById.getId())
+                        .build())
+                .quantity(supplyStockRequest.getNewQuantity())
+                .build();
+        var actionStock = actionStockRepository.create(action);
+        return StockResponse.builder()
+                .quantity(actionStock.getQuantity())
+                .id(actionStock.getId())
+                .build();
     }
 
-
+    @Override
+    public List<ActionStockResponse> findByBetweenDate(ActionStockDateRangeRequest actionStockDateRangeRequest) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        var dateStart = actionStockDateRangeRequest.getStartDate();
+        var dateEnd = actionStockDateRangeRequest.getEndDate();
+        LocalDateTime parsedDateStart = LocalDateTime.parse(dateStart, formatter);
+        LocalDateTime parsedDateEnd = LocalDateTime.parse(dateEnd, formatter);
+        Instant startInstant = parsedDateStart.atZone(ZoneId.systemDefault()).toInstant();
+        Instant endInstant = parsedDateEnd.atZone(ZoneId.systemDefault()).toInstant();
+        return stockRepository.findByBetweenDate(actionStockDateRangeRequest.getRestaurantId(), startInstant, endInstant );
+    }
 }

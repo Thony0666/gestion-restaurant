@@ -4,8 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-
 @Getter
 @Service
 @Builder
@@ -14,6 +12,6 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ActionStockDateRangeRequest {
     Integer restaurantId;
-    LocalDate startDate;
-    LocalDate endDate;
+    String startDate;
+    String endDate;
 }

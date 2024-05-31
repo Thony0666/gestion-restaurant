@@ -4,7 +4,6 @@ import com.anthonyo.kfc.kfc.dtos.responses.ActionStockResponse;
 import com.anthonyo.kfc.kfc.entities.ActionStock;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface ActionStockRepository {

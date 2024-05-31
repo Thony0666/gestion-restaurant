@@ -6,6 +6,7 @@ import com.anthonyo.kfc.kfc.service.ActionStockService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,11 +24,5 @@ public class ActionStockController {
     public List<ActionStockResponse> getActionStock() {
         return actionStockService.findAllActionStock();
     }
-    @GetMapping("/actions-between-dates")
-    public List<ActionStockResponse> getActionsBetweenDates(@RequestBody ActionStockDateRangeRequest dateRangeRequest) {
-        LocalDate startDate = dateRangeRequest.getStartDate();
-        LocalDate endDate = dateRangeRequest.getEndDate();
-        Integer restaurantId = dateRangeRequest.getRestaurantId();
-        return actionStockService.findActionsBetweenDates(startDate, endDate , restaurantId);
-    }
+
 }
