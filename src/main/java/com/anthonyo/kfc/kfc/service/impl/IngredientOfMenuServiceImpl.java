@@ -1,6 +1,7 @@
 package com.anthonyo.kfc.kfc.service.impl;
 
 import com.anthonyo.kfc.kfc.dtos.requests.IngredientOfMenuRequest;
+import com.anthonyo.kfc.kfc.dtos.requests.IngredientOneOfMenu;
 import com.anthonyo.kfc.kfc.dtos.requests.UpdateQteIOFRequest;
 import com.anthonyo.kfc.kfc.dtos.responses.IOMResponse;
 import com.anthonyo.kfc.kfc.dtos.responses.IngredientOfMenuResponse;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +47,11 @@ public class IngredientOfMenuServiceImpl implements IngredientOfMenuService {
     }
 
     @Override
+    public IngredientOneOfMenu createOneToOne(IngredientOneOfMenu toCreate) {
+        return ingredientOfMenuRepository.createOneToOne(toCreate);
+    }
+
+    @Override
     public void updateQte(UpdateQteIOFRequest updateQteIOFRequest) {
          ingredientOfMenuRepository.findByManyID(updateQteIOFRequest.getMenuId(), updateQteIOFRequest.getIngredientId()).orElseThrow(()->new NotFoundException("selected not found"));
          ingredientOfMenuRepository.update(updateQteIOFRequest);
@@ -53,5 +60,10 @@ public class IngredientOfMenuServiceImpl implements IngredientOfMenuService {
     @Override
     public List<IOMResponse> getByMenuId(Long menuId) {
         return ingredientOfMenuRepository.findAllByMenuId(menuId);
+    }
+
+    @Override
+    public Optional<IOMResponse> deleteByManyId(Integer menuId, Integer ingredientId) {
+        return ingredientOfMenuRepository.deleteByManyId(menuId,ingredientId);
     }
 }

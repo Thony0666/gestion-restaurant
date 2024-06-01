@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
@@ -34,6 +35,11 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public List<Ingredient> getAllIngredients() {
         return ingredientRepository.findAll();
+    }
+
+    @Override
+    public Optional<IngredientWithUnit> findUnit(Integer ingredientId) {
+        return ingredientRepository.findUnit(ingredientId);
     }
 
     @Override

@@ -119,15 +119,8 @@ FROM sumQte AS sq JOIN menu m ON sq.menu_id = m.id;
      WHERE s.sale_date BETWEEN '2024-05-29' AND '2024-05-30'
     GROUP BY s.restaurant_id, s.menu_id
 )
- SELECT
-    sm.restaurant_id,
-     r.place,
-     m.name,
-     sm.nbSold,
-     sm.totalPrice
- FROM sale_mov sm
-         JOIN restaurant r ON r.id = sm.restaurant_id
-          JOIN menu m ON m.id = sm.menu_id order by sm.restaurant_id;
+
+update ingredient_of_menu set quantity = 50 where menu_id = 1 and ingredient_id = 7;
                                                                                                                                JOIN ingredient i ON sq.ingredient = i.id JOIN unit u ON u.id = i.unit_id ORDER BY total DESC LIMIT 3;
 
 

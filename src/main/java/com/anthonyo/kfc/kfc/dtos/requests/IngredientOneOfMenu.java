@@ -1,4 +1,4 @@
-package com.anthonyo.kfc.kfc.dtos.responses;
+package com.anthonyo.kfc.kfc.dtos.requests;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -6,12 +6,12 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IOMResponse {
+public class IngredientOneOfMenu {
     Integer id;
-    String name;
+    Integer idMenu;
+    Integer idIngredient;
     Double quantity;
-    String unit;
 }

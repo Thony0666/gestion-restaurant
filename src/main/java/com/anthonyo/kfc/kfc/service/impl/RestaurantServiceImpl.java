@@ -14,6 +14,8 @@ import com.anthonyo.kfc.kfc.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RestaurantServiceImpl implements RestaurantService {
@@ -41,5 +43,10 @@ public class RestaurantServiceImpl implements RestaurantService {
             stockRepository.create(stock);
         }
         return restaurantMapper.toResponse(createdRestaurant);
+    }
+
+    @Override
+    public List<Restaurant> findAll() {
+        return restaurantRepository.findAll();
     }
 }

@@ -8,6 +8,7 @@ import com.anthonyo.kfc.kfc.service.IngredientService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -29,5 +30,10 @@ public class IngredientController {
     @GetMapping("/unit")
     public List<IngredientWithUnit> getAllIngredientsWithUnit() {
         return ingredientService.findIngredientWithUnit();
+    }
+
+    @GetMapping("/unit/{ingredientId}")
+    public Optional<IngredientWithUnit> getUnit(@PathVariable Integer ingredientId) {
+        return ingredientService.findUnit(ingredientId);
     }
 }

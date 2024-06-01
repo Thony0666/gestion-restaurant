@@ -106,4 +106,25 @@ public class IngredientRepositoryImpl implements IngredientRepository {
         }
         return ingredients;
     }
+
+    @Override
+    public Optional<IngredientWithUnit> findUnit(Integer ingredientId) {
+        try {
+            var ps = connection.prepareStatement("select i.id,i.name,u.name as unit from ingredient i join unit u on i.unit_id = u.id where i.id=?");
+            ps.setInt(1, ingredientId);
+            var result = ps.executeQuery();
+            if (result.next()) {
+                return Optional.of(
+                        IngredientWithUnit.builder()
+                                .id(result.getInt("id"))
+                                .name(result.getString("name"))
+                                .unit(result.getString("unit"))
+                                .build()
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
+    }
 }

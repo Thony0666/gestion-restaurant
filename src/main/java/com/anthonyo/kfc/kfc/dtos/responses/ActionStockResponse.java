@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ActionStockResponse {
+    Integer id;
     LocalDateTime actionDate;
     String ingredient;
     String type;

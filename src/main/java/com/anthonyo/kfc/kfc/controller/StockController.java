@@ -30,9 +30,9 @@ public class StockController {
     public StockResponse update(@RequestBody SupplyStockRequest stock) {
         return stockService.updateStock(stock);
     }
-    @GetMapping("/stock-between-dates")
-    public List<ActionStockResponse> getActionsBetweenDates(@RequestBody ActionStockDateRangeRequest dateRangeRequest) {
-        return stockService.findByBetweenDate(dateRangeRequest);
+    @GetMapping("/stock-between-dates/{restaurantId}/{startDate}/{endDate}")
+    public List<ActionStockResponse> getActionsBetweenDates(@PathVariable String startDate,@PathVariable String endDate ,@PathVariable Integer restaurantId) {
+        return stockService.findByBetweenDate(startDate,endDate,restaurantId);
     }
 
 }

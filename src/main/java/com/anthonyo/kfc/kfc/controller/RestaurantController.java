@@ -6,6 +6,8 @@ import com.anthonyo.kfc.kfc.entities.Restaurant;
 import com.anthonyo.kfc.kfc.service.RestaurantService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/restaurant")
@@ -19,5 +21,9 @@ public class RestaurantController {
     @PostMapping("create")
     public RestaurantResponse restaurantResponse(@RequestBody RestaurantRequest restaurantRequest){
         return restaurantService.create(restaurantRequest);
+    }
+    @GetMapping
+    public List<Restaurant> getRestaurants(){
+        return restaurantService.findAll();
     }
 }

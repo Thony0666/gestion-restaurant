@@ -11,4 +11,5 @@ public interface IngredientRepository {
     Optional<Ingredient> findById(Integer id);
     List<Ingredient> findAll();
     List<IngredientWithUnit> findIngredientWithUnit();
+    Optional<IngredientWithUnit> findUnit(Integer ingredientId);
 }

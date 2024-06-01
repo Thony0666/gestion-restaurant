@@ -108,6 +108,7 @@ public class StockRepositoryImpl implements StockRepository {
         var stocks = new ArrayList<ActionStockResponse>();
         var query = """
                 SELECT
+                    action_stock.id,
                     action_stock.action_date as date_et_heure,
                     action_stock.type as type,
                     ingredient.name AS ingredient,
@@ -132,6 +133,7 @@ public class StockRepositoryImpl implements StockRepository {
                 stocks.add(
                         ActionStockResponse.builder()
                                 .actionDate((date))
+                                .id(result.getInt("id"))
                                 .type(result.getString("type"))
                                 .ingredient(result.getString("ingredient"))
                                 .quantity(result.getDouble("quantite"))

@@ -7,6 +7,7 @@ import com.anthonyo.kfc.kfc.service.MenuService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -24,5 +25,13 @@ public class MenuController {
     @GetMapping
     public List<Menu> getAll() {
         return menuService.getAll();
+    }
+    @DeleteMapping("/delete/{menuId}")
+    public Menu deleteMenu(@PathVariable Integer menuId){
+        return menuService.deleteMenu(menuId);
+    }
+    @PutMapping("/update/{menuId}/{name}")
+    public Optional<Menu> update(@PathVariable Integer menuId , @PathVariable String name){
+        return menuService.updateById(menuId,name);
     }
 }

@@ -77,5 +77,31 @@ public class MenuRepositoryImpl implements MenuRepository {
         return menus;
     }
 
+    @Override
+    public Menu deleteMenu(Integer menuId) {
+        try {
+            var ps = connection.prepareStatement("DELETE FROM menu WHERE id=?");
+            ps.setInt(1,menuId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    @Override
+    public Optional<Menu> updateById(Integer menuId, String name) {
+        var menu = findById(menuId);
+        try {
+            var ps= connection.prepareStatement("update menu set name = ? where id = ?;");
+            ps.setString(1,name);
+            ps.setInt(2,menuId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return menu;
+    }
+
 
 }

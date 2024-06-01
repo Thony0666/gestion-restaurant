@@ -1,5 +1,6 @@
 package com.anthonyo.kfc.kfc.repository.impl;
 
+import com.anthonyo.kfc.kfc.dtos.requests.IngredientOneOfMenu;
 import com.anthonyo.kfc.kfc.dtos.requests.UpdateQteIOFRequest;
 import com.anthonyo.kfc.kfc.dtos.responses.IOMResponse;
 import com.anthonyo.kfc.kfc.entities.Ingredient;
@@ -28,6 +29,27 @@ public class IngredientOfMenuRepositoryImpl implements IngredientOfMenuRepositor
             ps.setDouble(1, toCreate.getQuantity());
             ps.setInt(2, toCreate.getMenu().getId());
             ps.setInt(3, toCreate.getIngredient().getId());
+            var result = ps.executeUpdate();
+            if (result > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    var id = rs.getInt(1);
+                    toCreate.setId(id);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return toCreate;
+    }
+
+    @Override
+    public IngredientOneOfMenu createOneToOne(IngredientOneOfMenu toCreate) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("insert into  ingredient_of_menu (quantity,menu_id,ingredient_id) values (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            ps.setDouble(1, toCreate.getQuantity());
+            ps.setInt(2,toCreate.getIdMenu());
+            ps.setInt(3,toCreate.getIdIngredient());
             var result = ps.executeUpdate();
             if (result > 0) {
                 ResultSet rs = ps.getGeneratedKeys();
@@ -108,11 +130,12 @@ public class IngredientOfMenuRepositoryImpl implements IngredientOfMenuRepositor
     public List<IOMResponse> findAllByMenuId(Long menuId) {
         var iom = new ArrayList<IOMResponse>();
         var sql = """
-                select i.name ,i.id
+                select i.name ,i.id,im.quantity,u.name as unit
                          from ingredient_of_menu im
                  join ingredient i on i.id = im.ingredient_id
+                 join unit u on u.id = i.unit_id
                      where menu_id =?
-                order by im.quantity desc
+                order by im.quantity desc;
                 """;
         try {
             var ps = connection.prepareStatement(sql);
@@ -124,6 +147,8 @@ public class IngredientOfMenuRepositoryImpl implements IngredientOfMenuRepositor
                                 .builder()
                                 .id(rs.getInt("id"))
                                 .name(rs.getString("name"))
+                                .quantity(rs.getDouble("quantity"))
+                                .unit(rs.getString("unit"))
                                 .build()
                 );
             }
@@ -131,5 +156,22 @@ public class IngredientOfMenuRepositoryImpl implements IngredientOfMenuRepositor
             throw new RuntimeException(e);
         }
         return iom;
+    }
+
+    @Override
+    public Optional<IOMResponse> deleteByManyId(Integer menuId, Integer ingredientId) {
+        try {
+            var ps = connection.prepareStatement("delete from ingredient_of_menu where menu_id=? and ingredient_id= ?;");
+            ps.setInt(1, menuId);
+            ps.setInt(2, ingredientId);
+            var result = ps.executeUpdate();
+            if (result > 0) {
+                return Optional.of(IOMResponse.builder().id(result).build());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return Optional.empty();
     }
 }

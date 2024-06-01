@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,5 +28,15 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<Menu> getAll() {
         return menuRepository.findAll();
+    }
+
+    @Override
+    public Menu deleteMenu(Integer menuId) {
+        return menuRepository.deleteMenu(menuId);
+    }
+
+    @Override
+    public Optional<Menu> updateById(Integer menuId , String name) {
+        return menuRepository.updateById(menuId,name);
     }
 }

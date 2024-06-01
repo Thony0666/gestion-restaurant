@@ -11,5 +11,5 @@ import java.util.List;
 public interface StockService {
     StockResponse createStock(StockRequest stockRequest);
     StockResponse updateStock(SupplyStockRequest supplyStockRequest);
-    List<ActionStockResponse> findByBetweenDate(ActionStockDateRangeRequest actionStockDateRangeRequest);
+    List<ActionStockResponse> findByBetweenDate(String startDate, String endDate ,Integer restaurantId);
 }

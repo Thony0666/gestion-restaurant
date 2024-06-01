@@ -75,14 +75,12 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List<ActionStockResponse> findByBetweenDate(ActionStockDateRangeRequest actionStockDateRangeRequest) {
+    public List<ActionStockResponse> findByBetweenDate(String startDate, String endDate ,Integer restaurantId) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        var dateStart = actionStockDateRangeRequest.getStartDate();
-        var dateEnd = actionStockDateRangeRequest.getEndDate();
-        LocalDateTime parsedDateStart = LocalDateTime.parse(dateStart, formatter);
-        LocalDateTime parsedDateEnd = LocalDateTime.parse(dateEnd, formatter);
+        LocalDateTime parsedDateStart = LocalDateTime.parse(startDate, formatter);
+        LocalDateTime parsedDateEnd = LocalDateTime.parse(endDate, formatter);
         Instant startInstant = parsedDateStart.atZone(ZoneId.systemDefault()).toInstant();
         Instant endInstant = parsedDateEnd.atZone(ZoneId.systemDefault()).toInstant();
-        return stockRepository.findByBetweenDate(actionStockDateRangeRequest.getRestaurantId(), startInstant, endInstant );
+        return stockRepository.findByBetweenDate(restaurantId, startInstant, endInstant );
     }
 }

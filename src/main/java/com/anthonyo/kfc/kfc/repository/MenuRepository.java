@@ -9,4 +9,6 @@ public interface MenuRepository {
     Menu create(Menu toCreate);
     Optional<Menu> findById(Integer id);
     List<Menu> findAll();
+    Menu deleteMenu(Integer menuId);
+    Optional<Menu> updateById(Integer menuId, String name);
 }
