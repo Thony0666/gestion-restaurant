@@ -20,14 +20,12 @@ public class MostUsedIngredientServiceImpl implements MostUsedIngredientService 
     private  final QteSortieRepository qteSortieRepository;
 
     @Override
-    public List<MostUsedIngredientResponse> findMostUsedIngredient(MostUsedIngredientRequest mostUsedIngredientRequest) {
+    public List<MostUsedIngredientResponse> findMostUsedIngredient(String startDate, String endDate ,Integer limit,Integer restaurantId) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        var dateStart = mostUsedIngredientRequest.getStartDate();
-        var dateEnd = mostUsedIngredientRequest.getEndDate();
-        LocalDate parsedDateStart = LocalDate.parse(dateStart, formatter);
-        LocalDate parsedDateEnd = LocalDate.parse(dateEnd, formatter);
+        LocalDate parsedDateStart = LocalDate.parse(startDate, formatter);
+        LocalDate parsedDateEnd = LocalDate.parse(endDate, formatter);
         Instant startInstant = parsedDateStart.atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant endInstant = parsedDateEnd.atStartOfDay(ZoneId.systemDefault()).toInstant();
-        return qteSortieRepository.findMostUsedIngredient(startInstant,endInstant,mostUsedIngredientRequest.getRestaurantId(),mostUsedIngredientRequest.getLimit());
+        return qteSortieRepository.findMostUsedIngredient(startInstant,endInstant,restaurantId,limit);
     }
 }

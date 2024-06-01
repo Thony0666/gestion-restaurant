@@ -112,8 +112,8 @@ public class QteSortieRepositoryImpl implements QteSortieRepository {
                                         WITH sumQte AS (SELECT qs.ingredient ,qs.menu_id,qs.restaurant_id ,SUM(qs.quantity) as total
                                                         FROM qte_sortie qs
                                                         WHERE qs.sortie_date BETWEEN ? AND ? AND restaurant_id = ?
-                                                        GROUP BY qs.ingredient,qs.menu_id,qs.restaurant_id)
-                                        SELECT i.id AS ingredient_id ,i.name AS ingredient,m.name as menu, sq.total as qte_expenses, u.name as unit  
+                                                        GROUP BY qs.ingredient,qs.menu_id,qs.restaurant_id )
+                                        SELECT i.id AS ingredient_id ,i.name AS ingredient,m.name as menu, sq.total as qte_expenses, u.name as unit
                     FROM sumQte AS sq JOIN menu m ON sq.menu_id = m.id
                                              JOIN ingredient i ON sq.ingredient = i.id 
                         JOIN unit u ON u.id = i.unit_id 

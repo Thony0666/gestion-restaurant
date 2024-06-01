@@ -15,6 +15,4 @@ public interface QteSortieRepository {
     Optional<QteSortie> findByManyId(Integer menu,Integer restaurant ,Integer ingredient);
     List<QteSortie> findAll();
     public List<MostUsedIngredientResponse> findMostUsedIngredient(Instant startDate , Instant endDate, Integer restaurantId, Integer limit) ;
-
-//    List<MostUsedIngredientResponse> findMostUsedIngredient(Instant startDate, Instant endDate, Integer restaurantId, Integer limit);
 }

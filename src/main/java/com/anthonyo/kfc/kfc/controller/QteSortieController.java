@@ -17,8 +17,8 @@ public class QteSortieController {
         this.mostUsedIngredientService = mostUsedIngredientService;
     }
 
-    @GetMapping
-    public List<MostUsedIngredientResponse> mostUsedIngredientRequest(@RequestBody  MostUsedIngredientRequest mostUsedIngredientRequest){
-        return mostUsedIngredientService.findMostUsedIngredient(mostUsedIngredientRequest);
+    @GetMapping("/{restaurantId}/{startDate}/{endDate}/{limit}")
+    public List<MostUsedIngredientResponse>   mostUsedIngredientRequest(@PathVariable String startDate,@PathVariable String endDate ,@PathVariable Integer limit,@PathVariable Integer restaurantId){
+        return mostUsedIngredientService.findMostUsedIngredient(startDate,endDate,limit,restaurantId);
     }
 }

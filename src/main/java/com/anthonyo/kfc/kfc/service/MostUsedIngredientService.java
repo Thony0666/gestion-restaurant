@@ -6,5 +6,5 @@ import com.anthonyo.kfc.kfc.dtos.responses.MostUsedIngredientResponse;
 import java.util.List;
 
 public interface MostUsedIngredientService {
-    List<MostUsedIngredientResponse> findMostUsedIngredient(MostUsedIngredientRequest mostUsedIngredientRequest);
+    List<MostUsedIngredientResponse> findMostUsedIngredient(String startDate, String endDate ,Integer limit,Integer restaurantId);
 }
