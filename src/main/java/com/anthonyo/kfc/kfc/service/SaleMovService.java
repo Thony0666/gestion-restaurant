@@ -6,5 +6,5 @@ import com.anthonyo.kfc.kfc.dtos.responses.SaleMovResponse;
 import java.util.List;
 
 public interface SaleMovService {
-    List<SaleMovResponse> findBetweenDate(SaleMovDateRequest saleMovDateRequest);
+    List<SaleMovResponse> findBetweenDate(String startDate, String endDate);
 }

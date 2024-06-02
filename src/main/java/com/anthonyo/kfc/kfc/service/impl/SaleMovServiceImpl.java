@@ -24,13 +24,11 @@ public class SaleMovServiceImpl implements SaleMovService {
     private final SaleMovRepository saleMovRepository;
 
     @Override
-    public List<SaleMovResponse> findBetweenDate(SaleMovDateRequest saleMovDateRequest) {
+    public List<SaleMovResponse> findBetweenDate(String startDate, String endDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         try {
-            var dateStart = saleMovDateRequest.getStartDate();
-            var dateEnd = saleMovDateRequest.getEndDate();
-            LocalDate parsedDateStart = LocalDate.parse(dateStart, formatter);
-            LocalDate parsedDateEnd = LocalDate.parse(dateEnd, formatter);
+            LocalDate parsedDateStart = LocalDate.parse(startDate, formatter);
+            LocalDate parsedDateEnd = LocalDate.parse(endDate, formatter);
 
             Instant startInstant = parsedDateStart.atStartOfDay(ZoneId.systemDefault()).toInstant();
             Instant endInstant = parsedDateEnd.atStartOfDay(ZoneId.systemDefault()).toInstant();

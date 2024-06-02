@@ -45,7 +45,8 @@ CREATE TABLE sale(
    price INT,
    sale_date TIMESTAMP,
    restaurant_id INT REFERENCES restaurant(id),
-   menu_id INT REFERENCES menu(id)
+   menu_id INT REFERENCES menu(id),
+    quantity INT not null
 );
 
 CREATE TABLE ingredient_of_menu(
@@ -118,7 +119,7 @@ FROM sumQte AS sq JOIN menu m ON sq.menu_id = m.id;
      FROM sale s
      WHERE s.sale_date BETWEEN '2024-05-29' AND '2024-05-30'
     GROUP BY s.restaurant_id, s.menu_id
-)
+);
 
 update ingredient_of_menu set quantity = 50 where menu_id = 1 and ingredient_id = 7;
                                                                                                                                JOIN ingredient i ON sq.ingredient = i.id JOIN unit u ON u.id = i.unit_id ORDER BY total DESC LIMIT 3;
@@ -127,7 +128,25 @@ update ingredient_of_menu set quantity = 50 where menu_id = 1 and ingredient_id 
 
 
 
-
+WITH sale_mov AS (
+    SELECT
+        s.restaurant_id,
+        s.menu_id,
+        SUM(s.price) AS totalPrice,
+        SUM(s.quantity) AS nbSold
+    FROM sale s
+    WHERE s.sale_date BETWEEN ? AND ?
+    GROUP BY s.restaurant_id, s.menu_id
+)
+SELECT
+    sm.restaurant_id,
+    r.place,
+    m.name,
+    sm.nbSold,
+    sm.totalPrice
+FROM sale_mov sm
+         JOIN restaurant r ON r.id = sm.restaurant_id
+         JOIN menu m ON m.id = sm.menu_id order by sm.restaurant_id;
 
 
 

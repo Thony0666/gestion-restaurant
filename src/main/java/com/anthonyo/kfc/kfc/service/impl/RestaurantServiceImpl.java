@@ -2,18 +2,15 @@ package com.anthonyo.kfc.kfc.service.impl;
 
 import com.anthonyo.kfc.kfc.dtos.requests.RestaurantRequest;
 import com.anthonyo.kfc.kfc.dtos.responses.RestaurantResponse;
-import com.anthonyo.kfc.kfc.entities.Ingredient;
-import com.anthonyo.kfc.kfc.entities.Restaurant;
-import com.anthonyo.kfc.kfc.entities.Stock;
+import com.anthonyo.kfc.kfc.entities.*;
 import com.anthonyo.kfc.kfc.exceptions.InternalServerError;
 import com.anthonyo.kfc.kfc.mappers.RestaurantMapper;
-import com.anthonyo.kfc.kfc.repository.IngredientRepository;
-import com.anthonyo.kfc.kfc.repository.RestaurantRepository;
-import com.anthonyo.kfc.kfc.repository.StockRepository;
+import com.anthonyo.kfc.kfc.repository.*;
 import com.anthonyo.kfc.kfc.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -22,7 +19,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantMapper restaurantMapper;
     private final RestaurantRepository restaurantRepository;
     private final StockRepository stockRepository;
+    private final MenuRepository menuRepository;
     private final IngredientRepository ingredientRepository;
+    private final SaleRepository saleRepository;
 
 
     @Override
@@ -41,6 +40,17 @@ public class RestaurantServiceImpl implements RestaurantService {
                     .restaurant(createdRestaurant)
                     .build();
             stockRepository.create(stock);
+        }
+        var menus = menuRepository.findAll();
+        for (var q : menus) {
+            var createSale = Sale.builder()
+                    .restaurant(Restaurant.builder().id(createdRestaurant.getId()).build())
+                    .menu(Menu.builder().id(q.getId()).build())
+                    .price(0)
+                    .saleDate(Instant.now())
+                    .quantity(0)
+                    .build();
+            saleRepository.creatSale(createSale);
         }
         return restaurantMapper.toResponse(createdRestaurant);
     }

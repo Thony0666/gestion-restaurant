@@ -21,6 +21,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class SaleServicesImpl implements SaleService {
     private final SaleRepository saleRepository;
+    private final  MenuRepository menuRepository;
     private final SaleMapper saleMapper;
     private final IngredientOfMenuRepository ingredientOfMenuRepository;
     private final StockRepository stockRepository;
@@ -30,8 +31,9 @@ public class SaleServicesImpl implements SaleService {
 
     @Override
     public SaleResponse creatSale(SaleRequest toCreate) {
+        var menu = menuRepository.findById(toCreate.getMenu()).orElseThrow(()-> new NotFoundException("menu not found"));
         var insertPrice = SaleRequest.builder()
-                .price(toCreate.getPrice()*toCreate.getQuantity())
+                .price(menu.getPrice() *toCreate.getQuantity())
                 .quantity(toCreate.getQuantity())
                 .restaurant(toCreate.getRestaurant())
                 .menu(toCreate.getMenu())

@@ -16,9 +16,9 @@ import java.util.List;
 public class SaleMovController {
     private final SaleMovService saleMovService;
 
-    @GetMapping("/between-dates")
-    public ResponseEntity<List<SaleMovResponse>> getSalesBetweenDates(@RequestBody SaleMovDateRequest saleMovDateRequest) {
-        List<SaleMovResponse> responses = saleMovService.findBetweenDate(saleMovDateRequest);
+    @GetMapping("/between-dates/{startDate}/{endDate}")
+    public ResponseEntity<List<SaleMovResponse>> getSalesBetweenDates(@PathVariable String startDate, @PathVariable String endDate) {
+        List<SaleMovResponse> responses = saleMovService.findBetweenDate(startDate,endDate);
         return ResponseEntity.ok(responses);
     }
 }

@@ -20,7 +20,7 @@ public class MenuController {
     @PostMapping("/create")
     public MenuResponse create(@RequestBody MenuRequest menuRequest) {
         System.out.println(menuRequest);
-        return menuService.create(menuRequest);
+      return   menuService.create(menuRequest);
     }
     @GetMapping
     public List<Menu> getAll() {
